@@ -1,0 +1,8 @@
+[userinfo]
+name = zhangsan
+pwd = abc
+
+[study]
+python base = 15
+python junior = 20
+linux base = 15 

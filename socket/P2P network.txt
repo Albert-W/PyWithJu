@@ -1,0 +1,18 @@
+title P2P network
+
+actor seed
+actor p1
+actor p2
+actor p3
+
+p1->seed : 8889, id1
+seed->seed: peers update
+seed -> p1: peers{}
+p1->p1:peers updata
+
+p2->seed : 8890, id2
+seed->seed: peers update
+seed -> p1: peers{}
+p1->p1:peers updata
+seed -> p2: peers{}
+p2->p2:peers updata

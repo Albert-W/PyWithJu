@@ -1,2 +1,2 @@
 # PyWithJu
-Learn python throuth jupyter notebook
+Learn python through jupyter notebook

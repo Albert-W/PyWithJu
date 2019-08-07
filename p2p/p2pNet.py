@@ -2,9 +2,8 @@ import threading
 import socket
 import sys 
 import json 
-import p2pfile
 
-seed = ("127.0.0.1",8888)
+seed = ("127.0.0.1",8881)
 
 # { 
 #   id1 = ["127.0.0.1",8888],
@@ -31,18 +30,6 @@ def rece(sk):
         
         dispatch(sk,action, addr)
 
-        # # 如果是第一次收到的地址，添加到字典
-        # # id : addr
-        # data, addr = sk.recvfrom(1024)
-        # if addr not in peers.values():
-        #     strs = data.decode().split()
-        #     peers[strs[0]]= addr 
-        # #print(addr)
-        # global peer
-        # peer = addr # 同名之后使用局部变量
-        # if data == b'exit':
-        #     break
-        # print(data.decode())
         
 def dispatch(sk,action, addr):
     
@@ -107,13 +94,11 @@ def send(sk):
             host = peers[l[-1]][0]
             port = peers[l[-1]][1]
             s = ' '.join(l[:-1]) 
-            if msg_input.startswith('#f'):
-                p2pfile.sendf(l[1], host,port)  
-            else:
-                sendms(sk,{
-                    "type":"input",
-                    "data":s
-                }, peers[l[-1]])
+
+            sendms(sk,{
+                "type":"input",
+                "data":s
+            }, peers[l[-1]])
         # "#f 1.txt id2"
         
 
@@ -127,9 +112,9 @@ def send(sk):
             continue
 
 # useage:
-# python p2pDatasharing.py 8888 id1
-# python p2pDatasharing.py 8889 id2
-# python p2pDatasharing.py 8890 id3
+# python p2pNet.py 8881 id1
+# python p2pNet.py 8882 id2
+# python p2pNet.py 8883 id3
 # friends # return peers
 # hello # send hello to all peers. 
 # good morning id2 # send good morning to id2
@@ -138,13 +123,13 @@ def send(sk):
 def main():
     # 创建套接字
     udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
     # 绑定本机ip和端口号
     port = int(sys.argv[1]) #从命令行获取端口号
     global myid
     myid = sys.argv[2]
     udp_socket.bind(('', port))
-    tcp_socket.bind(('', port))
+
     startpeer(udp_socket, myid)
     t1 = threading.Thread(target=rece, args=(udp_socket,))
     t2 = threading.Thread(target=send, args=(udp_socket,))

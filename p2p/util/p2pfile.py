@@ -36,33 +36,30 @@ def recef(filename, fromA):
     while 1:
         sk = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sk.bind((fromA[0], fromA[1]))    
-        sk.listen()
-        conn, addr = sk.accept()    
+        # the maximum number of connections. 
+        sk.listen(5)
+        conn, addr = sk.accept()  
+        # send data using this connection util finished.   
         with conn:
-            with open(filename,'ab') as f:
-                data = conn.recv(1024)
-                if data == b'finished':
-                    return 
-                f.write(data)
-                # 发送接收完成标志
-                conn.send('success'.encode()) 
-            print("receive file finished")          
+            while True:
+            # byte, append to file. 
+                with open(filename,'ab') as f:
+                    data = conn.recv(1024)
+                    if data == b'finished':
+                        break 
+                    f.write(data)
+                    # 发送接收完成标志
+                    conn.send('success'.encode()) 
+            print("receive file finished")           
  
 def main():
-    # create socket
-    # tcp_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    # 绑定本机ip和端口号
+
     ip = '127.0.0.1'
     myPort = int(sys.argv[1]) #从命令行获取端口号
     output = "output" # the name of output file. 
     t1 = threading.Thread(target=recef, args=(output,ip,myPort))
     t1.start()
-    # tcp_socket.bind(('', port))
-    # msg_input = input("please input filename and port:")
-    # l = msg_input.split()
-    # filename = l[0]
-    # toPort = int(l[1])
-    # t2 = threading.Thread(target=sendf, args=(filename,ip,toPort))
+
     t2 = threading.Thread(target=sendf, args=(ip,))
     t2.start()
 

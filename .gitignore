@@ -1,4 +1,7 @@
 *.html
 .ipynb_checkpoints
 __pycache__
+.vscode
+.gitignore
+
 
